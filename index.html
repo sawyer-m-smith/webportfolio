@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Name — Portfolio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo" href="index.html">Your Name</a>
+  <div class="links">
+    <a href="cars.html">Cars</a>
+    <a href="code.html">Code</a>
+    <a href="sewing.html">Sewing</a>
+    <a href="creative.html">Creative</a>
+    <a href="trail.html">Trail</a>
+    <a href="atlas.html">Atlas</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <h1>A map of what I've built.</h1>
+    <p>[One or two sentences on who you are — the line that frames the whole site before anyone clicks anything.]</p>
+  </div>
+</section>
+
+<!--
+  STARFIELD — each .star below is one category. To add a new one later:
+    1. Duplicate a whole <a class="star star--___"> block.
+    2. Give it a new modifier class (e.g. star--photography) and add matching
+       --star-photography / --tint-photography colors near the top of css/style.css
+       (copy the --star-cars / --tint-cars lines as a template).
+    3. Pick a top/left position (percentages) that doesn't overlap the others.
+    4. Point href at that category's page (and create that page from cars.html as a template).
+
+  The dashed gold line is the Trail, drawn through the categories it touches. It's just
+  an SVG polyline — its "points" are the same top/left percentages as the stars it
+  passes near. If you move a star or want the Trail to visit a different category,
+  update the numbers in the polyline's points="" attribute below to match.
+-->
+<div class="starfield">
+  <div class="bg-stars"></div>
+  <svg class="trail-path" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <polyline points="16,70 38,35 58,60 78,25" />
+  </svg>
+
+  <a class="star star--cars" style="top:70%;left:16%" href="cars.html">
+    <span class="star-dot"></span>
+    <span class="star-label">Cars & Flips</span>
+  </a>
+  <a class="star star--code" style="top:35%;left:38%" href="code.html">
+    <span class="star-dot"></span>
+    <span class="star-label">Code & CS</span>
+  </a>
+  <a class="star star--sewing" style="top:60%;left:58%" href="sewing.html">
+    <span class="star-dot"></span>
+    <span class="star-label">Sewing & Crafts</span>
+  </a>
+  <a class="star star--creative" style="top:25%;left:78%" href="creative.html">
+    <span class="star-dot"></span>
+    <span class="star-label">Creative</span>
+  </a>
+
+  <a class="atlas-cluster" href="atlas.html">
+    <span class="mini-star" style="top:20%;left:10%"></span>
+    <span class="mini-star" style="top:40%;left:35%"></span>
+    <span class="mini-star" style="top:10%;left:55%"></span>
+    <span class="atlas-label">The Atlas →</span>
+  </a>
+</div>
+
+<section style="text-align:center;padding:8px 24px 64px;">
+  <a class="btn" href="trail.html">Walk the Trail →</a>
+</section>
+
+<footer class="site-footer">
+  <span>© 2026 Your Name</span>
+  <span>your.email@example.com — github.com/yourhandle</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Trail — Your Name</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo" href="index.html">Your Name</a>
+  <div class="links">
+    <a href="cars.html">Cars</a>
+    <a href="code.html">Code</a>
+    <a href="sewing.html">Sewing</a>
+    <a href="creative.html">Creative</a>
+    <a href="trail.html">Trail</a>
+    <a href="atlas.html">Atlas</a>
+  </div>
+</nav>
+
+<header class="trail-intro">
+  <h1>The Trail</h1>
+  <p>[The story of how you got here — a path walked, not a resume list. This intro sets that tone before the waypoints below.]</p>
+</header>
+
+<!--
+  WAYPOINTS — one .waypoint per stop, in order (earliest first).
+
+  To add a new one: duplicate a whole <div class="waypoint reveal ..."> block below.
+    - Add a category modifier class (waypoint--cars, waypoint--code, waypoint--sewing,
+      waypoint--creative) to color-match the dot to that category, or leave it off
+      for a plain gold dot.
+    - If it links back to a specific project (like a car that was also a sale),
+      keep the <a class="waypoint-link">; otherwise just delete that line.
+-->
+<div class="trail">
+  <div class="trail-line"></div>
+
+  <div class="waypoint waypoint--code reveal">
+    <span class="waypoint-dot"></span>
+    <span class="waypoint-year">[Year]</span>
+    <h3>[Milestone title]</h3>
+    <p>[What happened, and why it mattered.]</p>
+  </div>
+
+  <div class="waypoint waypoint--cars reveal">
+    <span class="waypoint-dot"></span>
+    <span class="waypoint-year">[Year]</span>
+    <h3>[First real flip]</h3>
+    <p>[This is where a build was also a business milestone — say so plainly, numbers and all.]</p>
+    <a class="waypoint-link" href="project-template.html">See the build →</a>
+  </div>
+
+  <div class="waypoint reveal">
+    <span class="waypoint-dot"></span>
+    <span class="waypoint-year">Now</span>
+    <h3>Here</h3>
+    <p>[Where you're at right now, and what you're aiming at next.]</p>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <span>© 2026 Your Name</span>
+  <span>your.email@example.com — github.com/yourhandle</span>
+</footer>
+
+<script src="js/reveal.js"></script>
+</body>
+</html>
