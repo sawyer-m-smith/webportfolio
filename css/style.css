@@ -20,8 +20,15 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--paper); color: var(--ink); font-family: 'Inter', sans-serif; line-height: 1.65; }
+html { scroll-behavior: smooth; background: var(--paper); }
+body { margin: 0; color: var(--ink); font-family: 'Inter', sans-serif; line-height: 1.65; }
+
+/* Ambient sky - a fixed, full-page star layer sitting behind everything on every
+   page. Populated by js/sky.js. Purely decorative (aria-hidden), so it never
+   interferes with reading order or interaction. */
+.sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; background: var(--paper); }
+.sky .star { position: absolute; border-radius: 50%; background: #FFFFFF; animation: twinkle var(--dur, 4s) ease-in-out infinite; animation-delay: var(--delay, 0s); }
+.sky .glow { position: absolute; border-radius: 50%; filter: blur(70px); opacity: 0.14; transform: translate(-50%, -50%); }
 a { color: inherit; }
 img { max-width: 100%; display: block; }
 .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
@@ -43,16 +50,6 @@ img { max-width: 100%; display: block; }
 
 /* Starfield (home page) */
 .starfield { position: relative; width: 100%; max-width: 900px; margin: 24px auto 8px; aspect-ratio: 16 / 10; }
-.starfield .bg-stars {
-  position: absolute; inset: 0; pointer-events: none;
-  background-image:
-    radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.5) 50%, transparent),
-    radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,0.35) 50%, transparent),
-    radial-gradient(1px 1px at 50% 15%, rgba(255,255,255,0.4) 50%, transparent),
-    radial-gradient(1px 1px at 70% 55%, rgba(255,255,255,0.3) 50%, transparent),
-    radial-gradient(1px 1px at 85% 80%, rgba(255,255,255,0.45) 50%, transparent),
-    radial-gradient(1px 1px at 95% 30%, rgba(255,255,255,0.3) 50%, transparent);
-}
 .trail-path { position: absolute; inset: 0; width: 100%; height: 100%; }
 .trail-path polyline { fill: none; stroke: var(--gold); stroke-width: 0.4; stroke-dasharray: 1.5 1.5; opacity: 0.65; }
 
