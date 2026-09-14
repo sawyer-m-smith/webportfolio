@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapping 142 Fatal Avalanches — Sawyer M. Smith</title>
+<meta name="description" content="Pulling 800 data points from real avalanche records and finding out half of my hypotheses were wrong.">
+<meta property="og:title" content="Mapping 142 Fatal Avalanches — Sawyer M. Smith">
+<meta property="og:description" content="Pulling 800 data points from real avalanche records and finding out half of my hypotheses were wrong.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="stylesheet" href="css/style.css">
+<script src="js/sky.js" defer></script>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a class="logo" href="index.html" aria-label="Home" title="Back to home"><span class="logo-mark">SS</span> Sawyer M. Smith</a>
+  <div class="links">
+    <a href="cars.html">Cars</a>
+    <a href="code.html">Code</a>
+    <a href="creative.html">Creative</a>
+    <a href="trail.html">Trail</a>
+    <a href="atlas.html">Atlas</a>
+  </div>
+</nav>
+
+<header class="project-header">
+  <div class="wrap">
+    <div class="meta">
+      <span class="meta-tag">Code & CS</span>
+      <span class="meta-tag">May 2023 – Mar 2024</span>
+      <span class="meta-tag">Data collection, hypothesis testing, Unreal Engine</span>
+    </div>
+    <h1>Mapping 142 Fatal Avalanches</h1>
+  </div>
+</header>
+
+<div class="hero-photo">main project photo</div>
+
+<article class="writeup">
+  <div class="reveal">
+    <h2>The problem</h2>
+    <p>I wanted a data science project that actually connected to something I cared about, and backcountry snowboarding was it. I decided to analyze every avalanche in Colorado that had caused at least one death between 1997 and 2024, using records from the Colorado Avalanche Information Center, to see what patterns actually held up.</p>
+  </div>
+
+  <div class="reveal">
+    <h2>The process</h2>
+    <p>I manually built a dataset of 800 data points across 142 fatal avalanches in a Google Sheet, tracking six factors for each one: time of year, elevation, slab type, time of day, slope aspect, and slope angle. Before running any analysis, I wrote down six concrete hypotheses — like assuming most deadly avalanches happen above 12,000 feet, on east-facing slopes, between 3–4pm, on 35–40 degree slopes, on hard slabs, in February.</p>
+  </div>
+
+  <div class="reveal">
+    <h2>What went wrong</h2>
+    <p>About half of my hypotheses were flat-out wrong. I'd gone in expecting to mostly confirm what I already believed, and instead had to go dig back through the data and other studies to figure out why my assumptions didn't hold. That was more work than just writing up correct guesses would have been — and a better lesson because of it.</p>
+  </div>
+
+  <div class="reveal">
+    <h2>What I learned</h2>
+    <p>How to turn a messy real-world dataset into something legible — I built a separate graph for each factor once the raw numbers became too hard to read at a glance. I also used Unreal Engine to model snow's coefficient of friction, so I could actually demonstrate how an avalanche gets triggered rather than just describe it. The whole thing got written up as a formal lab report with a literature review comparing my numbers against existing studies.</p>
+  </div>
+</article>
+
+<section class="gallery">
+  <div class="grid">
+    <div class="shot">photo</div>
+    <div class="shot">photo</div>
+    <div class="shot">photo</div>
+    <div class="shot">photo</div>
+  </div>
+</section>
+
+<a class="back-link" href="code.html">&larr; back to Code & CS</a>
+
+<footer class="site-footer">
+  <span>© 2026 Sawyer M. Smith</span>
+  <div class="social-links">
+    <a href="mailto:your.email@example.com">Email</a>
+    <a href="https://github.com/sawyer-m-smith" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
+</footer>
+
+<script src="js/reveal.js"></script>
+</body>
+</html>
