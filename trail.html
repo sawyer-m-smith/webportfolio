@@ -3,14 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Trail — Your Name</title>
+<title>The Trail — Sawyer M. Smith</title>
+<meta name="description" content="The career journey of Sawyer M. Smith, told as a path rather than a resume.">
+<meta property="og:title" content="The Trail — Sawyer M. Smith">
+<meta property="og:description" content="The career journey of Sawyer M. Smith, told as a path rather than a resume.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="stylesheet" href="css/style.css">
 <script src="js/sky.js" defer></script>
 </head>
 <body>
 
 <nav class="site-nav">
-  <a class="logo" href="index.html">Your Name</a>
+  <a class="logo" href="index.html" aria-label="Home" title="Back to home"><span class="logo-mark">SS</span> Sawyer M. Smith</a>
   <div class="links">
     <a href="cars.html">Cars</a>
     <a href="code.html">Code</a>
@@ -31,22 +36,31 @@
 
   To add a new one: duplicate a whole <div class="waypoint reveal ..."> block below.
     - Add a category modifier class (waypoint--cars, waypoint--code, waypoint--sewing,
-      waypoint--creative) to color-match the dot to that category, or leave it off
-      for a plain gold dot.
+      waypoint--creative) AND a matching data-category attribute (cars, code, sewing,
+      creative) - the class handles the dot color, the data attribute is what the
+      filter buttons above actually check. Leave both off for a general milestone,
+      which always stays visible no matter which filter is active.
     - If it links back to a specific project (like a car that was also a sale),
       keep the <a class="waypoint-link">; otherwise just delete that line.
 -->
+<div class="trail-filter" role="group" aria-label="Filter the trail by category">
+  <button class="filter-btn is-active" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="cars">Cars</button>
+  <button class="filter-btn" data-filter="code">Code</button>
+  <button class="filter-btn" data-filter="sewing">Sewing</button>
+  <button class="filter-btn" data-filter="creative">Creative</button>
+</div>
 <div class="trail">
   <div class="trail-line"></div>
 
-  <div class="waypoint waypoint--code reveal">
+  <div class="waypoint waypoint--code reveal" data-category="code">
     <span class="waypoint-dot"></span>
     <span class="waypoint-year">[Year]</span>
     <h3>[Milestone title]</h3>
     <p>[What happened, and why it mattered.]</p>
   </div>
 
-  <div class="waypoint waypoint--cars reveal">
+  <div class="waypoint waypoint--cars reveal" data-category="cars">
     <span class="waypoint-dot"></span>
     <span class="waypoint-year">[Year]</span>
     <h3>[First real flip]</h3>
@@ -63,10 +77,15 @@
 </div>
 
 <footer class="site-footer">
-  <span>© 2026 Your Name</span>
-  <span>your.email@example.com — github.com/yourhandle</span>
+  <span>© 2026 Sawyer M. Smith</span>
+  <div class="social-links">
+    <a href="mailto:your.email@example.com">Email</a>
+    <a href="https://github.com/sawyer-m-smith" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a>
+  </div>
 </footer>
 
 <script src="js/reveal.js"></script>
+<script src="js/trail-filter.js"></script>
 </body>
 </html>
