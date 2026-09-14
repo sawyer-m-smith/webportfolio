@@ -94,6 +94,7 @@ img { max-width: 100%; display: block; }
 .project-card h4 { font-family: 'Space Grotesk', sans-serif; margin: 0 0 6px; font-size: 1.05rem; }
 .project-card p { margin: 0; font-size: 0.85rem; color: var(--muted); }
 .sold-badge { position: absolute; top: 10px; right: 10px; background: rgba(11,14,23,0.85); border: 1px solid var(--gold); color: var(--gold); font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 4px; }
+.type-badge { position: absolute; top: 10px; right: 10px; background: rgba(11,14,23,0.85); border: 1px solid var(--badge-color, var(--line)); color: var(--badge-color, var(--muted)); font-family: 'Space Mono', monospace; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 4px; }
 
 /* Project page */
 .project-header { padding: 48px 24px 24px; }
