@@ -19,11 +19,24 @@
 // or after choosing the reading view, the plain page below is what visitors get.
 (function () {
   var ok = false;
-  try { ok = !!document.createElement("canvas").getContext("webgl2"); } catch (e) {}
-  window.OBS_SUPPORTED = ok;
+  var software = false;
+  try {
+    var gl = document.createElement("canvas").getContext("webgl2");
+    ok = !!gl;
+    var info = gl && gl.getExtension("WEBGL_debug_renderer_info");
+    if (info) software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gl.getParameter(info.UNMASKED_RENDERER_WEBGL));
+  } catch (e) {}
   var chosen = null;
-  try { chosen = localStorage.getItem("obs-view"); } catch (e) {}
-  if (ok && chosen !== "reading") {
+  var slow = null;
+  try { chosen = localStorage.getItem("obs-view"); slow = sessionStorage.getItem("obs-slow"); } catch (e) {}
+  var forced = chosen === "3d";
+  window.OBS_SUPPORTED = ok;
+  window.OBS_SOFTWARE = software;
+  window.OBS_FORCED = forced;
+  // Without a graphics card the 3D view runs at about 1 frame a second, so these
+  // visitors start on the plain page and can still opt in.
+  window.OBS_REASON = forced ? null : software ? "software" : slow ? "slow" : null;
+  if (ok && chosen !== "reading" && !window.OBS_REASON) {
     document.documentElement.classList.add("obs-on");
     window.addEventListener("DOMContentLoaded", function () {
       import("./js/observatory/main.js").catch(function (err) {
@@ -119,10 +132,30 @@
 </div>
 <script>
 if (window.OBS_SUPPORTED) {
-  var obsSwitch = document.createElement("p");
+  var obsSwitch = document.createElement("div");
   obsSwitch.className = "obs-switch";
-  obsSwitch.innerHTML = '<button class="btn" type="button" style="border:0;cursor:pointer">Enter the 3D observatory</button>';
-  obsSwitch.firstChild.addEventListener("click", function () { localStorage.removeItem("obs-view"); location.reload(); });
+  var obsNotes = {
+    software: "Graphics acceleration is off in this browser, so you are seeing the plain star map. The 3D observatory needs it to run smoothly.",
+    slow: "The 3D observatory was running slowly here, so you are seeing the plain star map."
+  };
+  var obsReason = window.OBS_REASON;
+  if (obsReason) {
+    var obsNote = document.createElement("p");
+    obsNote.textContent = obsNotes[obsReason];
+    obsSwitch.append(obsNote);
+  }
+  var obsBtn = document.createElement("button");
+  obsBtn.className = "btn";
+  obsBtn.type = "button";
+  obsBtn.style.cssText = "border:0;cursor:pointer";
+  obsBtn.textContent = obsReason ? "Try the 3D observatory anyway" : "Enter the 3D observatory";
+  obsBtn.addEventListener("click", function () {
+    sessionStorage.removeItem("obs-slow");
+    if (obsReason) localStorage.setItem("obs-view", "3d");
+    else localStorage.removeItem("obs-view");
+    location.href = location.pathname;
+  });
+  obsSwitch.append(obsBtn);
   document.querySelector("#reading .starfield").before(obsSwitch);
 }
 </script>

@@ -14,7 +14,7 @@ import { createAudio } from './audio.js';
 
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const coarse = matchMedia('(pointer: coarse)').matches;
-const low = coarse || innerWidth < 760 || (navigator.hardwareConcurrency || 8) <= 4;
+const low = window.OBS_SOFTWARE || coarse || innerWidth < 760 || (navigator.hardwareConcurrency || 8) <= 4;
 const audio = createAudio();
 const ROOM_IDS = Object.keys(ROOMS);
 const clamp = THREE.MathUtils.clamp;
@@ -683,8 +683,6 @@ function updateReadout(now) {
   readout.lastChild.textContent = `Declination ${dec < 0 ? '-' : '+'}${String(Math.floor(ad)).padStart(2, '0')}° ${String(Math.floor((ad % 1) * 60)).padStart(2, '0')}′`;
 }
 
-let slowFrames = 0;
-let checked = 0;
 
 function frame(now) {
   requestAnimationFrame(frame);
@@ -775,19 +773,33 @@ function frame(now) {
   updateReadout(now);
   composer.render(dt);
 
-  // If this machine is struggling, quietly trade away the most expensive effects.
-  if (mode !== 'intro' && checked < 2) {
-    slowFrames = dt > 0.034 ? slowFrames + 1 : Math.max(0, slowFrames - 1);
-    if (slowFrames > 70) {
-      slowFrames = 0;
-      checked += 1;
-      if (checked === 1) {
-        dprLimit = Math.min(dpr, 1) * 0.8;
-        layout();
-      } else {
-        bloom.enabled = false;
-      }
-    }
+  watchSpeed(now);
+}
+
+// Every two seconds, if it's still struggling, give up the next most expensive thing.
+// Measured in real time, so a machine at 1 frame a second reacts in seconds, not minutes.
+const watch = { at: 0, frames: 0, step: 0 };
+document.addEventListener('visibilitychange', () => { watch.at = 0; });
+
+function watchSpeed(now) {
+  if (mode === 'intro') { watch.at = 0; return; }
+  if (!watch.at) { watch.at = now; watch.frames = 0; return; }
+  watch.frames += 1;
+  const spent = now - watch.at;
+  if (spent < 2000) return;
+  const fps = (watch.frames / spent) * 1000;
+  watch.at = now;
+  watch.frames = 0;
+  if (fps >= 24) return;
+  watch.step += 1;
+  if (watch.step === 1) {
+    dprLimit = Math.min(dpr, 1) * 0.75;
+    layout();
+  } else if (watch.step === 2) {
+    bloom.enabled = false;
+  } else if (fps < 12 && !window.OBS_FORCED) {
+    sessionStorage.setItem('obs-slow', '1');
+    location.href = location.pathname;
   }
 }
 
@@ -795,7 +807,7 @@ function frame(now) {
 
 addEventListener('resize', layout);
 readRoute();
-const skipIntro = reduced || coarse || innerWidth < 760 || sessionStorage.getItem('obs-intro-seen') || route;
+const skipIntro = reduced || window.OBS_SOFTWARE || coarse || innerWidth < 760 || sessionStorage.getItem('obs-intro-seen') || route;
 setMode('intro');
 layout();
 if (skipIntro) {

@@ -96,7 +96,8 @@ body[data-obs="trail"] .obs-rail { opacity: 1; visibility: visible; transition-d
 body[data-obs="intro"] .obs-reticle { opacity: 0; }
 
 /* Switch shown in the reading view */
-.obs-switch { text-align: center; margin: 0 0 40px; }
+.obs-switch { text-align: center; margin: 0 24px 40px; }
+.obs-switch p { max-width: 52ch; margin: 0 auto 14px; color: var(--muted); font-size: 0.92rem; }
 
 /* Portrait screens: words sit above and below the sky rather than beside it */
 @media (max-aspect-ratio: 115/100) {
