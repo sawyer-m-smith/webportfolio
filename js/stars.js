@@ -24,7 +24,10 @@
 
     var label = star.querySelector('.star-label');
     if (label && !label.dataset.countApplied) {
-      label.textContent = label.textContent + ' · ' + count;
+      var c = document.createElement('span');
+      c.className = 'star-count';
+      c.textContent = count + (count === 1 ? ' project' : ' projects');
+      label.appendChild(c);
       label.dataset.countApplied = 'true';
     }
   });
