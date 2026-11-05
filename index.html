@@ -12,6 +12,28 @@
 <link rel="stylesheet" href="css/style.css">
 <script src="js/sky.js" defer></script>
 <script src="js/stars.js" defer></script>
+<link rel="stylesheet" href="css/observatory.css">
+<script type="importmap">{"imports":{"three":"./js/vendor/three/three.module.js","three/addons/":"./js/vendor/three/addons/"}}</script>
+<script>
+// Decide before first paint whether to show the 3D view. Without JavaScript or WebGL 2,
+// or after choosing the reading view, the plain page below is what visitors get.
+(function () {
+  var ok = false;
+  try { ok = !!document.createElement("canvas").getContext("webgl2"); } catch (e) {}
+  window.OBS_SUPPORTED = ok;
+  var chosen = null;
+  try { chosen = localStorage.getItem("obs-view"); } catch (e) {}
+  if (ok && chosen !== "reading") {
+    document.documentElement.classList.add("obs-on");
+    window.addEventListener("DOMContentLoaded", function () {
+      import("./js/observatory/main.js").catch(function (err) {
+        console.error(err);
+        document.documentElement.classList.remove("obs-on");
+      });
+    });
+  }
+})();
+</script>
 </head>
 <body>
 
@@ -26,6 +48,7 @@
   </div>
 </nav>
 
+<div id="reading">
 <section class="hero">
   <div class="wrap">
     <h1>A map of what I've built.</h1>
@@ -93,6 +116,16 @@
     <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a>
   </div>
 </footer>
+</div>
+<script>
+if (window.OBS_SUPPORTED) {
+  var obsSwitch = document.createElement("p");
+  obsSwitch.className = "obs-switch";
+  obsSwitch.innerHTML = '<button class="btn" type="button" style="border:0;cursor:pointer">Enter the 3D observatory</button>';
+  obsSwitch.firstChild.addEventListener("click", function () { localStorage.removeItem("obs-view"); location.reload(); });
+  document.querySelector("#reading .starfield").before(obsSwitch);
+}
+</script>
 
 </body>
 </html>
