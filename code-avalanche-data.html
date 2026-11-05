@@ -1,85 +1,29 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mapping 142 Fatal Avalanches — Sawyer M. Smith</title>
-<meta name="description" content="Pulling 800 data points from real avalanche records and finding out half of my hypotheses were wrong.">
-<meta property="og:title" content="Mapping 142 Fatal Avalanches — Sawyer M. Smith">
-<meta property="og:description" content="Pulling 800 data points from real avalanche records and finding out half of my hypotheses were wrong.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapping 142 Fatal Avalanches, Sawyer M. Smith</title>
+<meta name="description" content="800 data points, six hypotheses, half of them wrong.">
+<meta property="og:title" content="Mapping 142 Fatal Avalanches, Sawyer M. Smith">
+<meta property="og:description" content="800 data points, six hypotheses, half of them wrong.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0b0b0b">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="stylesheet" href="css/style.css">
-<script src="js/sky.js" defer></script>
+<link rel="preload" href="fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
 </head>
-<body>
-
-<nav class="site-nav">
-  <a class="logo" href="index.html" aria-label="Home" title="Back to home"><span class="logo-mark">SS</span> Sawyer M. Smith</a>
-  <div class="links">
-    <a href="cars.html">Cars</a>
-    <a href="code.html">Code</a>
-    <a href="creative.html">Creative</a>
-    <a href="trail.html">Trail</a>
-    <a href="atlas.html">Atlas</a>
-  </div>
-</nav>
-
-<header class="project-header">
-  <div class="wrap">
-    <div class="meta">
-      <span class="meta-tag">Code & CS</span>
-      <span class="meta-tag">May 2023 – Mar 2024</span>
-      <span class="meta-tag">Data collection, hypothesis testing, Unreal Engine</span>
-    </div>
-    <h1>Mapping 142 Fatal Avalanches</h1>
-  </div>
+<body class="project">
+<header class="hd t-a" style="view-transition-name:p-code-avalanche-data">
+<a class="home" href="./">Sawyer M. Smith</a>
+<p class="stat">142</p>
+<h1>Mapping 142 Fatal Avalanches</h1>
+<p class="sub">fatal avalanches, 800 data points</p>
 </header>
+<main class="doc">
+<dl class="facts"><div><dt>When</dt><dd>May 2023 to Mar 2024</dd></div><div><dt>With</dt><dd>Data collection, hypothesis testing, Unreal Engine</dd></div><div><dt>Result</dt><dd>Formal lab report</dd></div></dl>
 
-<div class="hero-photo">main project photo</div>
-
-<article class="writeup">
-  <div class="reveal">
-    <h2>The problem</h2>
-    <p>I wanted a data science project that actually connected to something I cared about, and backcountry snowboarding was it. I decided to analyze every avalanche in Colorado that had caused at least one death between 1997 and 2024, using records from the Colorado Avalanche Information Center, to see what patterns actually held up.</p>
-  </div>
-
-  <div class="reveal">
-    <h2>The process</h2>
-    <p>I manually built a dataset of 800 data points across 142 fatal avalanches in a Google Sheet, tracking six factors for each one: time of year, elevation, slab type, time of day, slope aspect, and slope angle. Before running any analysis, I wrote down six concrete hypotheses — like assuming most deadly avalanches happen above 12,000 feet, on east-facing slopes, between 3–4pm, on 35–40 degree slopes, on hard slabs, in February.</p>
-  </div>
-
-  <div class="reveal">
-    <h2>What went wrong</h2>
-    <p>About half of my hypotheses were flat-out wrong. I'd gone in expecting to mostly confirm what I already believed, and instead had to go dig back through the data and other studies to figure out why my assumptions didn't hold. That was more work than just writing up correct guesses would have been — and a better lesson because of it.</p>
-  </div>
-
-  <div class="reveal">
-    <h2>What I learned</h2>
-    <p>How to turn a messy real-world dataset into something legible — I built a separate graph for each factor once the raw numbers became too hard to read at a glance. I also used Unreal Engine to model snow's coefficient of friction, so I could actually demonstrate how an avalanche gets triggered rather than just describe it. The whole thing got written up as a formal lab report with a literature review comparing my numbers against existing studies.</p>
-  </div>
-</article>
-
-<section class="gallery">
-  <div class="grid">
-    <div class="shot">photo</div>
-    <div class="shot">photo</div>
-    <div class="shot">photo</div>
-    <div class="shot">photo</div>
-  </div>
-</section>
-
-<a class="back-link" href="code.html">Back to Code & CS</a>
-
-<footer class="site-footer">
-  <span>© 2026 Sawyer M. Smith</span>
-  <div class="social-links">
-    <a href="mailto:your.email@example.com">Email</a>
-    <a href="https://github.com/sawyer-m-smith" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a>
-  </div>
-</footer>
-
-<script src="js/reveal.js"></script>
-</body>
-</html>
+<div class="secs"><section><h2>The problem</h2><p>I wanted a data science project that actually connected to something I cared about, and backcountry snowboarding was it. I decided to analyze every avalanche in Colorado that had caused at least one death between 1997 and 2024, using records from the Colorado Avalanche Information Center, to see what patterns actually held up.</p></section><section><h2>The process</h2><p>I manually built a dataset of 800 data points across 142 fatal avalanches in a Google Sheet, tracking six factors for each one: time of year, elevation, slab type, time of day, slope aspect, and slope angle. Before running any analysis, I wrote down six concrete hypotheses, like assuming most deadly avalanches happen above 12,000 feet, on east-facing slopes, between 3 and 4pm, on 35 to 40 degree slopes, on hard slabs, in February.</p></section><section><h2>What went wrong</h2><p>About half of my hypotheses were flat-out wrong. I&#x27;d gone in expecting to mostly confirm what I already believed, and instead had to go dig back through the data and other studies to figure out why my assumptions didn&#x27;t hold. That was more work than just writing up correct guesses would have been, and a better lesson because of it.</p></section><section><h2>What I learned</h2><p>How to turn a messy real-world dataset into something legible. I built a separate graph for each factor once the raw numbers became too hard to read at a glance. I also used Unreal Engine to model snow&#x27;s coefficient of friction, so I could actually demonstrate how an avalanche gets triggered rather than just describe it. The whole thing got written up as a formal lab report with a literature review comparing my numbers against existing studies.</p></section></div>
+</main>
+<a class="next t-b" href="cars-honda-element.html"><span>Next</span><strong>The $350 Honda Element</strong></a>
+</body></html>

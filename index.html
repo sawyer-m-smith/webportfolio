@@ -1,164 +1,49 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sawyer M. Smith — Portfolio</title>
-<meta name="description" content="Sawyer M. Smith's portfolio — cars, code, and creative work, mapped out like a night sky.">
-<meta property="og:title" content="Sawyer M. Smith — Portfolio">
-<meta property="og:description" content="Sawyer M. Smith's portfolio — cars, code, and creative work, mapped out like a night sky.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sawyer M. Smith, portfolio</title>
+<meta name="description" content="Sawyer M. Smith&#x27;s portfolio: cars, code, and creative work.">
+<meta property="og:title" content="Sawyer M. Smith, portfolio">
+<meta property="og:description" content="Sawyer M. Smith&#x27;s portfolio: cars, code, and creative work.">
 <meta property="og:type" content="website">
+<meta name="theme-color" content="#0b0b0b">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="stylesheet" href="css/style.css">
-<script src="js/sky.js" defer></script>
-<script src="js/stars.js" defer></script>
-<link rel="stylesheet" href="css/observatory.css">
-<script type="importmap">{"imports":{"three":"./js/vendor/three/three.module.js","three/addons/":"./js/vendor/three/addons/"}}</script>
-<script>
-// Decide before first paint whether to show the 3D view. Without JavaScript or WebGL 2,
-// or after choosing the reading view, the plain page below is what visitors get.
-(function () {
-  var ok = false;
-  var software = false;
-  try {
-    var gl = document.createElement("canvas").getContext("webgl2");
-    ok = !!gl;
-    var info = gl && gl.getExtension("WEBGL_debug_renderer_info");
-    if (info) software = /swiftshader|llvmpipe|softpipe|software|basic render/i.test(gl.getParameter(info.UNMASKED_RENDERER_WEBGL));
-  } catch (e) {}
-  var chosen = null;
-  var slow = null;
-  try { chosen = localStorage.getItem("obs-view"); slow = sessionStorage.getItem("obs-slow"); } catch (e) {}
-  var forced = chosen === "3d";
-  window.OBS_SUPPORTED = ok;
-  window.OBS_SOFTWARE = software;
-  window.OBS_FORCED = forced;
-  // Without a graphics card the 3D view runs at about 1 frame a second, so these
-  // visitors start on the plain page and can still opt in.
-  window.OBS_REASON = forced ? null : software ? "software" : slow ? "slow" : null;
-  if (ok && chosen !== "reading" && !window.OBS_REASON) {
-    document.documentElement.classList.add("obs-on");
-    window.addEventListener("DOMContentLoaded", function () {
-      import("./js/observatory/main.js").catch(function (err) {
-        console.error(err);
-        document.documentElement.classList.remove("obs-on");
-      });
-    });
-  }
-})();
-</script>
+<link rel="preload" href="fonts/archivo-latin-wdth-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
 </head>
 <body>
-
-<nav class="site-nav">
-  <a class="logo" href="index.html" aria-label="Home" title="Back to home"><span class="logo-mark">SS</span> Sawyer M. Smith</a>
-  <div class="links">
-    <a href="cars.html">Cars</a>
-    <a href="code.html">Code</a>
-    <a href="creative.html">Creative</a>
-    <a href="trail.html">Trail</a>
-    <a href="atlas.html">Atlas</a>
-  </div>
-</nav>
-
-<div id="reading">
-<section class="hero">
-  <div class="wrap">
-    <h1>A map of what I've built.</h1>
-    <p>I designed my own high school curriculum from scratch — restoring a car for profit, building a game in Unreal Engine, running a computer-refurbishing business, analyzing 800 data points from fatal avalanches. Along the way I learned that how I feel about a hard problem is a choice, not a given — and that's shaped how I build everything since.</p>
-  </div>
+<main class="board">
+<section class="tile t-hero">
+<h1>Sawyer M. Smith</h1>
+<p>I designed my own high school curriculum from scratch: restoring a car for profit, building a game in Unreal Engine, running a computer-refurbishing business, analyzing 800 data points from fatal avalanches. Along the way I learned that how I feel about a hard problem is a choice, not a given, and that&#x27;s shaped how I build everything since.</p>
 </section>
-
-<!--
-  STARFIELD — each .star below is one category. Star size is driven by its
-  data-count attribute (real project count), not fixed - update that number
-  as you add or remove projects on the matching room page.
-
-  To add a new category later:
-    1. Duplicate a whole <a class="star star--___" data-count="0"> block.
-    2. Give it a new modifier class (e.g. star--photography) and add matching
-       --star-photography / --tint-photography colors near the top of css/style.css
-       (copy the --star-cars / --tint-cars lines as a template).
-    3. Pick a top/left position (percentages) that doesn't overlap the others.
-    4. Point href at that category's page (and create that page from cars.html as a template).
-
-  The dashed gold line is the Trail, drawn through the categories it touches. It's just
-  an SVG polyline — its "points" are the same top/left percentages as the stars it
-  passes near. If you move a star or want the Trail to visit a different category,
-  update the numbers in the polyline's points="" attribute below to match.
--->
-<div class="starfield">
-  <svg class="chart-grid" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,22 Q50,10 100,22" /><path d="M0,46 Q50,34 100,46" /><path d="M0,70 Q50,58 100,70" /><path d="M0,94 Q50,82 100,94" />
-    <line x1="12" y1="0" x2="16" y2="100" /><line x1="37" y1="0" x2="38.5" y2="100" /><line x1="63" y1="0" x2="61.5" y2="100" /><line x1="88" y1="0" x2="84" y2="100" />
-  </svg>
-  <svg class="trail-path" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <polyline points="20,70 50,35 80,60" />
-  </svg>
-
-  <a class="star star--cars" style="top:70%;left:20%" href="cars.html" data-count="3">
-    <span class="star-dot"></span>
-    <span class="star-label">Cars & Flips</span>
-  </a>
-  <a class="star star--code star--label-above" style="top:35%;left:50%" href="code.html" data-count="3">
-    <span class="star-dot"></span>
-    <span class="star-label">Code & CS</span>
-  </a>
-  <a class="star star--creative" style="top:60%;left:80%" href="creative.html" data-count="6">
-    <span class="star-dot"></span>
-    <span class="star-label">Creative</span>
-  </a>
-
-  <a class="atlas-cluster" href="atlas.html">
-    <span class="mini-star" style="top:20%;left:10%"></span>
-    <span class="mini-star" style="top:40%;left:35%"></span>
-    <span class="mini-star" style="top:10%;left:55%"></span>
-    <span class="atlas-label">The Atlas</span>
-  </a>
-</div>
-
-<section style="text-align:center;padding:8px 24px 64px;">
-  <a class="btn" href="trail.html">Walk the trail</a>
-</section>
-
-<footer class="site-footer">
-  <span>© 2026 Sawyer M. Smith</span>
-  <div class="social-links">
-    <a href="mailto:your.email@example.com">Email</a>
-    <a href="https://github.com/sawyer-m-smith" target="_blank" rel="noopener">GitHub</a>
-    <a href="https://www.linkedin.com/in/your-profile" target="_blank" rel="noopener">LinkedIn</a>
-  </div>
-</footer>
-</div>
-<script>
-if (window.OBS_SUPPORTED) {
-  var obsSwitch = document.createElement("div");
-  obsSwitch.className = "obs-switch";
-  var obsNotes = {
-    software: "Graphics acceleration is off in this browser, so you are seeing the plain star map. The 3D observatory needs it to run smoothly.",
-    slow: "The 3D observatory was running slowly here, so you are seeing the plain star map."
-  };
-  var obsReason = window.OBS_REASON;
-  if (obsReason) {
-    var obsNote = document.createElement("p");
-    obsNote.textContent = obsNotes[obsReason];
-    obsSwitch.append(obsNote);
-  }
-  var obsBtn = document.createElement("button");
-  obsBtn.className = "btn";
-  obsBtn.type = "button";
-  obsBtn.style.cssText = "border:0;cursor:pointer";
-  obsBtn.textContent = obsReason ? "Try the 3D observatory anyway" : "Enter the 3D observatory";
-  obsBtn.addEventListener("click", function () {
-    sessionStorage.removeItem("obs-slow");
-    if (obsReason) localStorage.setItem("obs-view", "3d");
-    else localStorage.removeItem("obs-view");
-    location.href = location.pathname;
-  });
-  obsSwitch.append(obsBtn);
-  document.querySelector("#reading .starfield").before(obsSwitch);
-}
-</script>
-
-</body>
-</html>
+<a class="tile t-a" href="code-avalanche-data.html" style="view-transition-name:p-code-avalanche-data">
+<span class="cat">Code</span>
+<span class="stat">142</span>
+<span class="name">Mapping 142 Fatal Avalanches</span>
+<span class="hook">800 data points, six hypotheses, half of them wrong.</span>
+</a>
+<a class="tile t-b" href="cars-honda-element.html" style="view-transition-name:p-cars-honda-element">
+<span class="cat">Cars</span>
+<span class="stat">$400</span>
+<span class="name">The $350 Honda Element</span>
+<span class="hook">Bought it broken, sold it after the emissions test blew up the plan.</span>
+</a>
+<a class="tile t-c" href="creative-game-design.html" style="view-transition-name:p-creative-game-design">
+<span class="cat">Creative</span>
+<span class="stat">2 yrs</span>
+<span class="name">Two Years, One Game</span>
+<span class="hook">A project built to test whether I could stop quitting when things got hard.</span>
+</a>
+<a class="tile t-d" href="code-computer-refurb.html" style="view-transition-name:p-code-computer-refurb">
+<span class="cat">Code</span>
+<span class="stat">Profit</span>
+<span class="name">Flipping Computers, Not Just Cars</span>
+<span class="hook">A refurbishing business that worked, until a supply shock ended it.</span>
+</a>
+<section class="tile t-path" id="path"><h2>Path</h2><ol><li><span>2021</span>Started refurbishing computers</li><li><span>2021 to 2023</span>Built a game in Unreal Engine 5</li><li><span>2022 to 2023</span>Bought a $350 project car</li><li><span>2023 to 2024</span>Analyzed 142 fatal avalanches</li><li><span>2024</span>Led a four-day backpacking trip</li><li><span>Now</span>Here</li></ol></section>
+<section class="tile t-now" id="now"><h2>Now</h2><p>I&#x27;m at [school or job], working on [current focus]. Next, I&#x27;m aiming at [goal].</p><a href="https://github.com/sawyer-m-smith" rel="noopener">GitHub</a></section>
+</main>
+</body></html>
