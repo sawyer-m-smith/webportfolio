@@ -32,7 +32,10 @@ document.body.prepend(canvas);
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance' });
 if (!renderer.capabilities.isWebGL2) throw new Error('WebGL 2 is required');
-let dpr = Math.min(devicePixelRatio, low ? 1.5 : 2);
+// Sharpness is capped by total pixels, so a huge monitor costs no more than a normal one.
+let dprLimit = Infinity;
+const pickDpr = () => Math.max(0.7, Math.min(devicePixelRatio, low ? 1.5 : 2, dprLimit, Math.sqrt((low ? 1.6e6 : 2.6e6) / (innerWidth * innerHeight))));
+let dpr = pickDpr();
 renderer.setPixelRatio(dpr);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
@@ -274,6 +277,10 @@ function layout() {
   portrait = aspect < 1.15;
   camera.aspect = aspect;
   camera.updateProjectionMatrix();
+  dpr = pickDpr();
+  shared.uPx.value = dpr;
+  renderer.setPixelRatio(dpr);
+  composer.setPixelRatio(dpr);
   renderer.setSize(W, H, false);
   composer.setSize(W, H);
   bloom.setSize(W * dpr * 0.5, H * dpr * 0.5);
@@ -408,7 +415,7 @@ nav.querySelectorAll('a').forEach((a) => {
 
 /* ---------- Opening sequence ---------- */
 
-const intro = { t: 0, dur: 9, start: new THREE.Vector3(), startLook: new THREE.Vector3() };
+const intro = { t: 0, dur: 8, began: 0, firstAt: 0, lastAt: 0, steady: 0, slow: 0, windowAt: 0, frames: 0, start: new THREE.Vector3(), startLook: new THREE.Vector3() };
 intro.start.copy(DOME_AT).add(new THREE.Vector3(-8.5, -3.5, 15));
 intro.startLook.copy(DOME_AT).add(new THREE.Vector3(0.6, 14, -8));
 
@@ -424,9 +431,32 @@ function finishIntro() {
   ROOM_IDS.forEach((id) => { rooms[id].reveal = reduced ? 1 : 0; });
 }
 
-function updateIntro(dt) {
-  intro.t += dt;
+// Runs on the wall clock, so a slow frame can't stretch the sequence into slow motion.
+// If it can't hold 14 frames a second, it cuts straight to the sky rather than stutter.
+function updateIntro(now) {
+  if (!intro.began) {
+    // Hold on black until frames are steady, so nobody sees the page still settling.
+    if (!intro.firstAt) intro.firstAt = now;
+    intro.steady = now - intro.lastAt < 45 ? intro.steady + 1 : 0;
+    intro.lastAt = now;
+    if (intro.steady < 6 && now - intro.firstAt < 2500) return;
+    intro.began = now;
+    intro.windowAt = now;
+  }
+  intro.t = (now - intro.began) / 1000;
   const t = intro.t;
+  intro.frames += 1;
+  const spent = now - intro.windowAt;
+  if (spent > 800) {
+    intro.slow = (intro.frames / spent) * 1000 < 14 ? intro.slow + 1 : 0;
+    intro.windowAt = now;
+    intro.frames = 0;
+    if (intro.slow >= 2) {
+      finishIntro();
+      applyRoute(true);
+      return;
+    }
+  }
   curtain.style.opacity = 1 - span(t, 0.2, 1.8);
   dome.open(ease(span(t, 1.6, 5.2)));
   const rise = ease(span(t, 3.6, intro.dur));
@@ -662,7 +692,7 @@ function frame(now) {
   const dt = Math.min(timer.getDelta(), 0.1);
   shared.uTime.value += dt;
 
-  if (mode === 'intro') updateIntro(dt);
+  if (mode === 'intro') updateIntro(now);
   if (mode === 'trail') updateTrail(dt);
 
   rig.swoop = 0;
@@ -752,10 +782,7 @@ function frame(now) {
       slowFrames = 0;
       checked += 1;
       if (checked === 1) {
-        dpr = Math.min(dpr, 1);
-        shared.uPx.value = dpr;
-        renderer.setPixelRatio(dpr);
-        composer.setPixelRatio(dpr);
+        dprLimit = Math.min(dpr, 1) * 0.8;
         layout();
       } else {
         bloom.enabled = false;
@@ -768,7 +795,7 @@ function frame(now) {
 
 addEventListener('resize', layout);
 readRoute();
-const skipIntro = reduced || sessionStorage.getItem('obs-intro-seen') || route;
+const skipIntro = reduced || coarse || innerWidth < 760 || sessionStorage.getItem('obs-intro-seen') || route;
 setMode('intro');
 layout();
 if (skipIntro) {
@@ -782,5 +809,17 @@ if (skipIntro) {
   rig.look.copy(intro.startLook);
 }
 prevPos.copy(rig.pos);
+
+// Do the expensive one-time work now, behind the black curtain: compile every shader,
+// draw one frame, and wait for the graphics card to finish painting the sky. Otherwise
+// all of it lands in the first seconds of the opening sequence.
+camera.position.copy(rig.pos);
+camera.lookAt(rig.look);
+camera.updateMatrixWorld();
+renderer.compile(scene, camera);
+composer.render(0.016);
+const gl = renderer.getContext();
+gl.readPixels(0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array(4));
+
 document.documentElement.classList.add('obs-ready');
 requestAnimationFrame(frame);

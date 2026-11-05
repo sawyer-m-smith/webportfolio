@@ -1,5 +1,56 @@
 import * as THREE from 'three';
 
+const LAMPS = [[-15, -2, 11], [15, -2, 11], [0, -3, -17]].map((a) => new THREE.Vector3(...a));
+const LAMP_COLOR = new THREE.Color(1, 0.16, 0.09);
+const VIEW = new THREE.Vector3(-8.5, -3.5, 15);
+
+/**
+ * Bakes the red lamplight into each vertex once, so the dome draws with the cheapest
+ * material there is. It fills the whole screen, which made per-pixel lights very costly.
+ */
+function bakeLight(root) {
+  const p = new THREE.Vector3();
+  const n = new THREE.Vector3();
+  const l = new THREE.Vector3();
+  const v = new THREE.Vector3();
+  const h = new THREE.Vector3();
+  const normalMatrix = new THREE.Matrix3();
+  root.updateMatrixWorld(true);
+  root.traverse((mesh) => {
+    const base = mesh.userData.bake;
+    if (!base) return;
+    const g = mesh.geometry;
+    const pos = g.attributes.position;
+    const nor = g.attributes.normal;
+    const col = new Float32Array(pos.count * 3);
+    normalMatrix.getNormalMatrix(mesh.matrixWorld);
+    for (let i = 0; i < pos.count; i++) {
+      p.fromBufferAttribute(pos, i).applyMatrix4(mesh.matrixWorld);
+      n.fromBufferAttribute(nor, i).applyMatrix3(normalMatrix).normalize();
+      v.copy(VIEW).sub(p).normalize();
+      if (n.dot(v) < 0) n.negate();
+      let r = base.r * 0.05;
+      let gg = base.g * 0.055;
+      let b = base.b * 0.09;
+      LAMPS.forEach((lamp) => {
+        l.copy(lamp).sub(p);
+        const d2 = l.lengthSq();
+        l.normalize();
+        const fall = 90 / (30 + d2);
+        const diff = Math.max(0, n.dot(l)) * fall;
+        h.copy(l).add(v).normalize();
+        const shine = Math.pow(Math.max(0, n.dot(h)), 26) * fall * mesh.userData.spec;
+        r += (base.r * diff + shine) * LAMP_COLOR.r;
+        gg += (base.g * diff + shine) * LAMP_COLOR.g;
+        b += (base.b * diff + shine) * LAMP_COLOR.b;
+      });
+      col.set([r, gg, b], i * 3);
+    }
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    g.deleteAttribute('uv');
+  });
+}
+
 const brass = () => new THREE.MeshStandardMaterial({ color: 0xb98a3e, metalness: 1, roughness: 0.3 });
 
 /** An armillary sphere. Its needle points at whichever part of the sky you're aiming for. */
@@ -66,14 +117,23 @@ export function makeArmillary() {
 export function makeDome() {
   const R = 24;
   const root = new THREE.Group();
-  const shell = new THREE.MeshStandardMaterial({ color: 0x1b2030, metalness: 0.75, roughness: 0.5, side: THREE.DoubleSide, envMapIntensity: 0.15 });
-  const rib = new THREE.MeshStandardMaterial({ color: 0x41362c, metalness: 0.9, roughness: 0.38, envMapIntensity: 0.3 });
+  const lit = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+  const part = (geometry, hex, spec = 0) => {
+    const m = new THREE.Mesh(geometry, lit);
+    m.userData.bake = new THREE.Color(hex);
+    m.userData.spec = spec;
+    return m;
+  };
+  const SHELL = 0x454f6c;
+  const RIB = 0x6b5a48;
+  const PAINT = 0xa4a7b0;
+  const BRASS = 0xc9973f;
 
   const half = () => {
     const g = new THREE.Group();
-    g.add(new THREE.Mesh(new THREE.SphereGeometry(R, 64, 24, Math.PI / 2, Math.PI, 0, Math.PI / 2), shell));
+    g.add(part(new THREE.SphereGeometry(R, 72, 28, Math.PI / 2, Math.PI, 0, Math.PI / 2), SHELL));
     for (let i = 0; i <= 8; i++) {
-      const m = new THREE.Mesh(new THREE.TorusGeometry(R - 0.25, 0.14, 8, 48, Math.PI / 2), rib);
+      const m = part(new THREE.TorusGeometry(R - 0.25, 0.14, 6, 40, Math.PI / 2), RIB, 0.1);
       m.rotation.y = -Math.PI / 2 + (i / 8) * Math.PI;
       g.add(m);
     }
@@ -88,44 +148,37 @@ export function makeDome() {
   left.add(l);
   root.add(right, left);
 
-  const wall = new THREE.Mesh(new THREE.CylinderGeometry(R, R, 9, 64, 1, true), shell);
+  const wall = part(new THREE.CylinderGeometry(R, R, 9, 72, 4, true), SHELL);
   wall.position.y = -4.5;
-  const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(R, 64),
-    new THREE.MeshStandardMaterial({ color: 0x0e1018, metalness: 0.4, roughness: 0.62 }),
-  );
+  const floor = part(new THREE.CircleGeometry(R, 72), 0x171a24);
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -9;
   root.add(wall, floor);
 
   const scope = new THREE.Group();
-  const paint = new THREE.MeshStandardMaterial({ color: 0x8a8d96, metalness: 0.55, roughness: 0.38, side: THREE.DoubleSide, envMapIntensity: 0.1 });
-  const brassy = brass();
-  brassy.envMapIntensity = 0.3;
-  scope.add(new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.1, 19, 40, 1, true), paint));
+  scope.add(part(new THREE.CylinderGeometry(2.4, 2.1, 19, 48, 12, true), PAINT, 0.12));
   [-8.8, -2.5, 3.5, 9].forEach((y) => {
-    const band = new THREE.Mesh(new THREE.TorusGeometry(y > 0 ? 2.46 : 2.28, 0.17, 12, 48), brassy);
+    const band = part(new THREE.TorusGeometry(y > 0 ? 2.46 : 2.28, 0.17, 10, 48), BRASS, 0.5);
     band.rotation.x = Math.PI / 2;
     band.position.y = y;
     scope.add(band);
   });
   scope.position.set(0, 4.5, -3);
   scope.rotation.x = -0.34;
-  const fork = new THREE.Mesh(new THREE.BoxGeometry(5.8, 1.4, 1.4), paint);
+  const fork = part(new THREE.BoxGeometry(5.8, 1.4, 1.4), PAINT);
   fork.position.set(0, -0.2, -2.4);
-  const pier = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.8, 8.8, 24), paint);
+  const pier = part(new THREE.CylinderGeometry(1.1, 1.8, 8.8, 24, 4), PAINT);
   pier.position.set(0, -4.6, -2.4);
   root.add(scope, fork, pier);
 
-  [[-15, -2, 11], [15, -2, 11], [0, -3, -17]].forEach(([x, y, z]) => {
-    const lamp = new THREE.PointLight(0xff2f1f, 230, 58, 1.7);
-    lamp.position.set(x, y, z);
-    root.add(lamp);
+  bakeLight(root);
+
+  LAMPS.forEach((at) => {
     const bulb = new THREE.Mesh(
-      new THREE.SphereGeometry(0.18, 12, 12),
+      new THREE.SphereGeometry(0.18, 10, 10),
       new THREE.MeshBasicMaterial({ color: new THREE.Color(0xff3a26).multiplyScalar(5) }),
     );
-    bulb.position.copy(lamp.position);
+    bulb.position.copy(at);
     root.add(bulb);
   });
 
