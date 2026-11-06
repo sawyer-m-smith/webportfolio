@@ -85,6 +85,14 @@ a[href] { text-underline-offset: .2em; }
 .card .viz { margin-top: auto; padding-top: 16px; }
 .c-a { grid-column: span 7; } .c-b { grid-column: span 5; } .c-c { grid-column: span 4; } .c-d { grid-column: span 5; } .c-e { grid-column: span 3; }
 
+/* The 370Z */
+.zcar { width: 100%; height: auto; }
+.zcar * { vector-effect: non-scaling-stroke; }
+.showroom .zcar { width: 100%; }
+.z .body { fill: #231a1e; stroke: currentColor; stroke-width: 2.6; stroke-linejoin: round; }
+.z .glass { fill: #0d090b; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.z .seam { fill: none; stroke: #6b5a5e; stroke-width: 1.6; stroke-linecap: round; }
+.z .lamp { fill: var(--t); }
 /* The alloy wheel */
 .z { display: block; overflow: visible; color: var(--fg); }
 .wheel { width: min(100%, 250px); height: auto; margin: 0 auto; }
@@ -101,8 +109,8 @@ a[href] { text-underline-offset: .2em; }
 .z .road { fill: none; stroke: var(--line); stroke-width: 3; stroke-dasharray: 34 22; vector-effect: non-scaling-stroke; }
 .card:hover .z .rim, .card.live .z .rim, .showroom:hover .z .rim { animation: spin 1s linear infinite; }
 .card:hover .z .road, .card.live .z .road { animation: road .45s linear infinite; }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes road { to { stroke-dashoffset: -56; } }
+@keyframes spin { to { transform: rotate(-360deg); } }
+@keyframes road { to { stroke-dashoffset: 56; } }
 
 .term { border: 1px solid var(--line); border-radius: 10px; background: #0b0809; font: .86rem/1.7 var(--mono); }
 .term-bar, .ide-bar { display: flex; gap: 6px; align-items: center; padding: 9px 12px; border-bottom: 1px solid var(--line); }
