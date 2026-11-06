@@ -31,7 +31,7 @@ a[href] { text-underline-offset: .2em; }
 .site a:hover { background: #2a1f23; }
 .site a[aria-current] { background: var(--fg); color: #1a1316; }
 .site .mark { display: flex; align-items: center; gap: 7px; padding-left: 8px; font-weight: 700; }
-.site .mark svg { width: 34px; height: 16px; flex: none; color: var(--t); }
+.site .mark svg { width: 22px; height: 22px; flex: none; color: var(--t); }
 .site .mark[aria-current] svg { color: var(--a); }
 
 /* Shared parts */
@@ -85,21 +85,24 @@ a[href] { text-underline-offset: .2em; }
 .card .viz { margin-top: auto; padding-top: 16px; }
 .c-a { grid-column: span 7; } .c-b { grid-column: span 5; } .c-c { grid-column: span 4; } .c-d { grid-column: span 5; } .c-e { grid-column: span 3; }
 
-/* The 370Z */
-.z { display: block; width: 100%; height: auto; overflow: visible; color: var(--fg); }
-.z .body { fill: #231a1e; stroke: currentColor; stroke-width: 2.4; stroke-linejoin: round; }
-.z .glass { fill: #0d090b; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
-.z .seam { fill: none; stroke: #6b5a5e; stroke-width: 1.6; stroke-linecap: round; }
-.z .tire { fill: #0b0809; stroke: currentColor; stroke-width: 2.2; }
-.z .rim { fill: none; stroke: var(--t); stroke-width: 3; stroke-linecap: round; transform-box: fill-box; transform-origin: center; }
-.z .lamp { fill: var(--t); }
-.z .beam { fill: var(--t); opacity: .08; transition: opacity .3s; }
-.z .road { stroke: var(--line); stroke-width: 3; stroke-dasharray: 34 22; }
-.card:hover .z .rim, .showroom:hover .z .rim { animation: spin 1s linear infinite; }
-.card:hover .z .road, .showroom:hover .z .road { animation: road .45s linear infinite; }
-.card:hover .z .beam, .showroom:hover .z .beam { opacity: .26; }
-@keyframes spin { to { transform: rotate(-360deg); } }
-@keyframes road { to { stroke-dashoffset: 56; } }
+/* The alloy wheel */
+.z { display: block; overflow: visible; color: var(--fg); }
+.wheel { width: min(100%, 250px); height: auto; margin: 0 auto; }
+.showroom .wheel { width: min(100%, 340px); margin-right: 0; }
+.wheel-w .wheel { width: min(70%, 215px); }
+.road-l { width: 100%; height: 8px; margin-top: 2px; }
+.z .tire { fill: #0b0809; stroke: #4a3b3f; stroke-width: 2; }
+.z .tread { fill: none; stroke: #241b1e; stroke-width: 7; stroke-dasharray: 3 7; }
+.z .rim { transform-box: fill-box; transform-origin: center; }
+.z .lip { fill: #150f11; stroke: var(--t); stroke-width: 3; }
+.z .spokes { fill: var(--t); }
+.z .hubc { fill: #150f11; stroke: var(--t); stroke-width: 3; }
+.z .lugs { fill: var(--t); }
+.z .road { fill: none; stroke: var(--line); stroke-width: 3; stroke-dasharray: 34 22; vector-effect: non-scaling-stroke; }
+.card:hover .z .rim, .card.live .z .rim, .showroom:hover .z .rim { animation: spin 1s linear infinite; }
+.card:hover .z .road, .card.live .z .road { animation: road .45s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes road { to { stroke-dashoffset: -56; } }
 
 .term { border: 1px solid var(--line); border-radius: 10px; background: #0b0809; font: .86rem/1.7 var(--mono); }
 .term-bar, .ide-bar { display: flex; gap: 6px; align-items: center; padding: 9px 12px; border-bottom: 1px solid var(--line); }
@@ -111,12 +114,12 @@ a[href] { text-underline-offset: .2em; }
 @keyframes blink { 50% { opacity: 0; } }
 .mini-menu li { padding: 5px 10px; border-radius: 7px; font-weight: 600; color: var(--dim); transition: background .15s, color .15s; }
 .mini-menu li:first-child { background: color-mix(in srgb, var(--t) 18%, transparent); color: var(--t); }
-.card:hover .mini-menu li:first-child { background: transparent; color: var(--dim); }
-.card:hover .mini-menu li:nth-child(2) { background: color-mix(in srgb, var(--t) 18%, transparent); color: var(--t); }
+.card:hover .mini-menu li:first-child, .card.live .mini-menu li:first-child { background: transparent; color: var(--dim); }
+.card:hover .mini-menu li:nth-child(2), .card.live .mini-menu li:nth-child(2) { background: color-mix(in srgb, var(--t) 18%, transparent); color: var(--t); }
 .mini-map { display: block; width: 100%; height: auto; }
 .mini-map path { fill: none; stroke: #4a3b3f; stroke-width: 1.4; }
 .mini-map .trail { stroke: var(--t); stroke-width: 2.4; stroke-dasharray: 7 7; }
-.card:hover .mini-map .trail { animation: march 1s linear infinite; }
+.card:hover .mini-map .trail, .card.live .mini-map .trail { animation: march 1s linear infinite; }
 @keyframes march { to { stroke-dashoffset: -28; } }
 .mini-map circle { fill: var(--t); }
 .mini-rail { border-left: 2px solid var(--line); padding-left: 14px; font-size: .94em; }
@@ -266,6 +269,14 @@ body.outdoors { background: var(--bg) url('topo.svg') center top / 1400px auto; 
   }
 }
 
+@media (hover: none) {
+  .card:hover, .stop:hover, a.bay:hover, .menu a:hover, .btn:hover, .compass:hover { transform: none; }
+  .card:hover .z .rim:not(.x), .card:hover .z .road:not(.x), .showroom:hover .z .rim, .card:hover .mini-map .trail { animation: none; }
+  .card.live .z .rim:not(.x) { animation: spin 1s linear infinite; }
+  .card.live .z .road:not(.x) { animation: road .45s linear infinite; }
+  .card.live .mini-map .trail { animation: march 1s linear infinite; }
+  .glow::before { display: none; }
+}
 @media (max-width: 900px) {
   .board { display: flex; flex-direction: column; }
   .card { min-height: 220px; }
@@ -278,9 +289,19 @@ body.outdoors { background: var(--bg) url('topo.svg') center top / 1400px auto; 
   .top { grid-template-columns: minmax(0, 1fr); }
   .gauge-w { width: min(66vw, 250px); margin: 0 auto; }
   .site { left: 8px; right: 8px; transform: none; max-width: none; }
-  .site a { padding: 8px 10px; }
+  .site { justify-content: space-between; }
+  .site a { padding: 8px 7px; font-size: .84rem; }
   .site .mark span { display: none; }
-  .site .mark { padding: 8px; }
+  .site .mark { padding: 5px 6px; }
+  .toc { display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none; margin-bottom: 0; }
+  .toc a { flex: none; white-space: nowrap; }
+  .files .toc { display: none; }
+  .files nav { display: flex; flex-wrap: wrap; gap: 2px; }
+  .files nav p { width: 100%; }
+  .files { padding: 8px; }
+  .side { padding: 16px; }
+  .specs { margin-top: 10px; }
+  .showroom .wheel { width: min(70%, 260px); margin: 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

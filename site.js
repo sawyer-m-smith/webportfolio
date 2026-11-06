@@ -25,6 +25,16 @@ if (dial) {
     });
   });
   needle.addEventListener('animationend', function () { needle.style.animation = 'none'; });
+  if (matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+    document.querySelector('.read-s').textContent = 'Scroll to move it';
+    var live = new IntersectionObserver(function (items) {
+      items.forEach(function (i) {
+        i.target.classList.toggle('live', i.isIntersecting);
+        if (i.isIntersecting) point(i.target.dataset.dial, i.target.dataset.dial.charAt(0).toUpperCase() + i.target.dataset.dial.slice(1));
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    document.querySelectorAll('.card').forEach(function (c) { live.observe(c); });
+  }
 }
 
 // Documentation pages: highlight the section being read
