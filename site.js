@@ -7,6 +7,33 @@ document.querySelectorAll('.glow').forEach(function (el) {
   }, { passive: true });
 });
 
+// Depth: cards lean toward the pointer, and the header layers shift at different speeds
+if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  document.querySelectorAll('.card, .bay').forEach(function (el) {
+    el.classList.add('tilt');
+    el.addEventListener('pointermove', function (e) {
+      var r = el.getBoundingClientRect();
+      var x = (e.clientX - r.left) / r.width - .5;
+      var y = (e.clientY - r.top) / r.height - .5;
+      el.classList.add('tilting');
+      el.style.setProperty('--rx', (-y * 7).toFixed(2) + 'deg');
+      el.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
+    }, { passive: true });
+    el.addEventListener('pointerleave', function () {
+      el.classList.remove('tilting');
+      el.style.setProperty('--rx', '0deg');
+      el.style.setProperty('--ry', '0deg');
+    });
+  });
+  var waves = document.querySelector('.waves');
+  if (waves) {
+    addEventListener('pointermove', function (e) {
+      waves.style.setProperty('--px', ((e.clientX / innerWidth - .5) * -1).toFixed(3));
+      waves.style.setProperty('--py', ((e.clientY / innerHeight - .5) * -1).toFixed(3));
+    }, { passive: true });
+  }
+}
+
 // Home gauge: the needle follows whichever section you are about to open
 var dial = document.getElementById('dial');
 if (dial) {
