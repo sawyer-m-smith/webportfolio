@@ -9,7 +9,7 @@ document.querySelectorAll('.glow').forEach(function (el) {
 
 // Depth: cards lean toward the pointer, and the header layers shift at different speeds
 if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  document.querySelectorAll('.card, .bay').forEach(function (el) {
+  document.querySelectorAll('.bay').forEach(function (el) {
     el.classList.add('tilt');
     el.addEventListener('pointermove', function (e) {
       var r = el.getBoundingClientRect();
@@ -25,42 +25,11 @@ if (matchMedia('(hover: hover)').matches && !matchMedia('(prefers-reduced-motion
       el.style.setProperty('--ry', '0deg');
     });
   });
-  var waves = document.querySelector('.waves');
-  if (waves) {
+  var hills = document.querySelector('.hills');
+  if (hills) {
     addEventListener('pointermove', function (e) {
-      waves.style.setProperty('--px', ((e.clientX / innerWidth - .5) * -1).toFixed(3));
-      waves.style.setProperty('--py', ((e.clientY / innerHeight - .5) * -1).toFixed(3));
+      hills.style.setProperty('--px', ((e.clientX / innerWidth - .5) * -1).toFixed(3));
     }, { passive: true });
-  }
-}
-
-// Home gauge: the needle follows whichever section you are about to open
-var dial = document.getElementById('dial');
-if (dial) {
-  var ANG = { cars: -108, code: -54, creative: 0, outdoors: 54, career: 108 };
-  var read = document.getElementById('read');
-  var needle = dial.querySelector('.needle');
-  var point = function (key, label) {
-    needle.style.setProperty('--ang', ANG[key] + 'deg');
-    read.textContent = label;
-    dial.querySelectorAll('a').forEach(function (a) { a.classList.toggle('on', a.dataset.dial === key); });
-  };
-  document.querySelectorAll('[data-dial]').forEach(function (el) {
-    var label = el.dataset.dial.charAt(0).toUpperCase() + el.dataset.dial.slice(1);
-    ['pointerenter', 'focus'].forEach(function (t) {
-      el.addEventListener(t, function () { point(el.dataset.dial, label); });
-    });
-  });
-  needle.addEventListener('animationend', function () { needle.style.animation = 'none'; });
-  if (matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
-    document.querySelector('.read-s').textContent = 'Scroll to move it';
-    var live = new IntersectionObserver(function (items) {
-      items.forEach(function (i) {
-        i.target.classList.toggle('live', i.isIntersecting);
-        if (i.isIntersecting) point(i.target.dataset.dial, i.target.dataset.dial.charAt(0).toUpperCase() + i.target.dataset.dial.slice(1));
-      });
-    }, { rootMargin: '-45% 0px -45% 0px' });
-    document.querySelectorAll('.card').forEach(function (c) { live.observe(c); });
   }
 }
 
